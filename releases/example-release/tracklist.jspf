@@ -1,0 +1,23 @@
+{
+  "playlist": {
+    "title"         : "Cosmic Voyage",
+    "creator"       : "zirafa",
+    "track"         : [
+        {
+          "location"      : ["releases/example-release/juno-pulse.mp3"], 
+          "title"         : "Juno Pulse",
+          "creator"       : "Jesse Pash"
+        },
+        {
+          "location"      : ["releases/example-release/flying-guitar.mp3"], 
+          "title"         : "Flying Guitar",
+          "creator"       : "Guitarz1970"
+        },
+        {
+          "location"      : ["releases/example-release/minimoog-bass.mp3"], 
+          "title"         : "Minimoog Bass",
+          "creator"       : "Garzul"
+        }            
+      ]
+  }
+}

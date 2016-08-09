@@ -1,0 +1,25 @@
+/**
+ * Lists
+ */
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin:1rem 0 1rem 1.5em;
+}
+li {
+  margin-bottom: 1rem;
+}
+ol li {
+  list-style:outside decimal;
+}
+ul.inline,
+ul.links.inline {
+  display: inline;
+  padding-left: 0;
+}
+ul.inline li {
+  display: inline;
+  list-style-type: none;
+  padding: 0 0.5em;
+}

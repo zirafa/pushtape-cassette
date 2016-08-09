@@ -1,0 +1,26 @@
+{
+  "lastBuild": {},
+  "settings": {
+    "homePage": "releases",
+    "cleanURLs": false
+  },
+  "pages": {
+     "releases" : {},
+     "about" : {"location" : "pages/about.md"},
+     "shows" : {"location" : "pages/shows.md"}
+  },
+  "releases": {
+    "example-release": {
+      "title" : "Cosmic Voyage",
+      "playlist" : "releases/example-release/tracklist.jspf",
+      "artwork" : "releases/example-release/artwork.jpg",
+      "notes" : "releases/example-release/notes.md"  
+    },
+    "example-release-two": {
+      "title" : "Bird Life",
+      "playlist" : "releases/example-release-two/tracklist.jspf",
+      "artwork" : "releases/example-release-two/artwork.jpg",
+      "notes" : "releases/example-release-two/notes.md"  
+    }
+  }
+}

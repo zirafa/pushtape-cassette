@@ -1,0 +1,33 @@
+{
+  "playlist": {
+    "title"         : "Bird Life",
+    "creator"       : "zirafa",
+    "track"         : [
+        {
+          "location"      : ["releases/example-release-two/whip-birds.mp3"], 
+          "title"         : "Whip Birds",
+          "creator"       : "Luke Foster"
+        },
+        {
+          "location"      : ["releases/example-release-two/mockingbird.mp3"], 
+          "title"         : "Mockingbird",
+          "creator"       : "Guitarz1970"
+        },
+        {
+          "location"      : ["releases/example-release-two/marsh-rain-birds-thunder.mp3"], 
+          "title"         : "Marsh Rain Birds thunder",
+          "creator"       : "The Boatman"
+        },
+        {
+          "location"      : ["releases/example-release-two/flapping-bird.mp3"], 
+          "title"         : "Flapping Bird",
+          "creator"       : "Bruceosonhadordeverdade"
+        },
+        {
+          "location"      : ["releases/example-release-two/morningbogfrogs.mp3"], 
+          "title"         : "Morning Bog Frogs",
+          "creator"       : "KGJones"
+        }        
+      ]
+  }
+}

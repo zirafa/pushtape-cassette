@@ -1,0 +1,26 @@
+# Don't show directory listings for URLs which map to a directory.
+Options -Indexes
+
+# Follow symbolic links in this directory.
+Options +FollowSymLinks
+
+# Set default index file
+DirectoryIndex index.html
+
+# Redirect 404s to index file
+ErrorDocument 404 /index.html
+
+# Having problems with mod_rewrite?
+# http://stackoverflow.com/questions/1755826/mod-rewrite-path-issues
+# http://stackoverflow.com/questions/25293601/angularjs-crashes-when-i-define-a-route-with-two-parameters-in-it
+<ifModule mod_rewrite.c>
+  RewriteEngine on
+  
+  # Don't rewrite if we match an existing file or directory path
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # Redirect all other requests to the main index file for JS URL routing
+  RewriteRule (.*) ./index.html
+</ifModule>
+

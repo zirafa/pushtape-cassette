@@ -1,0 +1,13 @@
+/**
+ * Debugging styles to help with development
+ */
+
+
+/**
+ * Highlight Bootstrap grid columns
+ */
+[class*="col-"] {
+  background: rgba(86, 61, 124, 0.15);
+  border: 1px solid rgba(86, 61, 124, 0.2);
+  padding:10px;
+}

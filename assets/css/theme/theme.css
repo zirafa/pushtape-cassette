@@ -1,0 +1,195 @@
+/**
+ * This is a general theme CSS file used to style all mobile & global
+ * styles following the "mobile first" pattern. To stay organized and
+ * prevent this file becoming long and unmanageable, it's recommended you
+ * use component stylesheets when possible before using this file.
+ *
+ * After you have defined your global styles here, all tablet &
+ * desktop media queries should be defined separately in the
+ * breakpoints.css file.
+ */
+
+/**
+ * Layout and containers
+ */
+html, #container, .inner {
+  position: relative;
+  min-height: 100%;  
+  background-color:#222;
+}
+#container {
+  margin:0 auto;
+  margin-bottom:100px;
+  max-width:100%;
+  overflow:auto;
+}
+a {
+  color:#DDD;
+}
+#content {
+  padding:20px;
+  margin:0 auto;
+  background:rgba(0,0,0,.5);
+  color:#FFF;
+  margin:0 auto;
+}
+
+#content a {
+  border-bottom:dotted 1px #DDD;
+}
+
+#content h1.title a {
+  border:none;
+  color:#FFF;
+}
+#content .tracklist a,
+#content .pt-play-all {
+  border-bottom:none;
+  color:#fff;
+}
+
+/* Uncomment for full scale background style */
+/*
+html, #container, .inner { background-color:transparent;}
+#content { background: rgba(0,0,0,.8); }
+html {
+  background:url(../../images/background/tapemachine.jpg) center center no-repeat fixed;
+  background-size:cover;
+}
+*/
+
+/**
+ * Header
+ */
+header {
+  background:#16191e;
+  color:#FFF;
+  position:sticky;
+  top:0px;
+  z-index:10;
+}
+header a {
+  color:#cfd2da;
+}
+#logo-site-name {
+  color:#000;
+  margin-right:2rem;
+}
+#site-name {
+  font-size:2.4rem;
+  margin:0;
+  padding:0 1rem;
+  vertical-align:middle;
+  display:inline-block;
+  line-height:56px; /* This is affected by top & bottom border widths*/
+}
+#logo {
+  display:inline-block;
+}
+#logo a {
+}
+#logo img {
+  height:56px;
+  vertical-align:middle;
+}
+#site-name a {
+  color:#FFF;
+}
+
+/**
+ * Release
+ */
+.artwork {
+  clear:both;
+  border:solid #5F5F5F 1px;
+  position:relative;
+  width:100%;
+  margin-bottom:1em;
+}
+.artwork img {
+  padding:0;
+  margin:0;
+  display:block;
+  width:100%;
+}
+.tracklist {
+  /*
+  margin-left:2em;
+  list-style-type:decimal-leading-zero;
+  */
+  margin-bottom:2em;
+}
+
+/**
+ * Footer
+ */
+footer {
+  color:#000;
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+}
+.footer-text,
+.pt-controls {
+  padding:1rem;
+  font-size:1.2rem;
+  line-height:1.2rem;
+  background-color:rgba(0,0,0,.9);
+  /*border-top:solid 1px #444;*/
+}
+.footer-text {
+  font-size:1.2rem;
+  padding:.75rem;
+  background-color:#000;
+  color:#999;
+  border-top:solid 1px #222;
+}
+.pt-controls {
+  width:100%;
+  font-size:1.5rem;
+  line-height:2.5rem;
+  padding:1rem 2rem;
+}
+
+/**
+ * Releases page
+ */
+ul.release-list {
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+ul.release-list li {
+  display:inline;
+}
+ul.release-list .release-title {
+  display:inline-block;
+}
+ul.release-list .artwork {
+  float:none;
+}
+#content .release {
+  overflow:auto;
+  border:none;
+  padding-bottom:20px;
+  margin-bottom:20px;
+  display:block;
+  vertical-align:middle;
+}
+.creator {
+  display:inline-block;
+  margin-left:1rem;
+  color:#888;
+  font-size:3rem;
+}
+.creator:before {
+  content:' by ';
+}
+.artist {
+  display:inline-block;
+  margin-left:1rem;
+  color:#888;
+  font-style:italic;
+}
+

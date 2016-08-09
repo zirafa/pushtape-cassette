@@ -1,0 +1,27 @@
+/* Tablet/Desktop */
+@media screen and (min-width:768px) {
+
+  #content {
+    width:90%;
+  }
+  #logo-site-name {
+    float:left;
+  } 
+  .artwork {
+    float:right;
+    margin-left:4rem;
+    width:auto;
+    max-width:600px;
+  }
+  .release {
+    float:left;
+    margin:3rem
+  }
+  .release-list li .artwork {
+    max-width:300px;
+    margin:0;
+  }
+  ul.menu.hide {
+    display:block;
+  }
+}
