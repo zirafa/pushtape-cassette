@@ -13,7 +13,6 @@ I chose micro-libraries because the requirements for rendering a static music ap
 - [Marked.js - markdown parser](https://github.com/chjj/marked)
 - [Micromustache.js - sub-implementation of the {{mustache}} template engine ](https://github.com/userpixel/micromustache)
 - [Soundmanager2.js - crossplatform audio engine](https://github.com/scottschiller/SoundManager2)
-- [Lazysizes.js - High performance and SEO friendly lazy loader for images](https://github.com/aFarkas/lazysizes) 
 - [Pushtape-player.js - customizable JS audio page player with global controls](https://github.com/zirafa/pushtape-player.js)
 - [Bootstrap grid-only](https://github.com/zirafa/bootstrap-grid-only)
 
@@ -85,19 +84,22 @@ Example cassette.json:
     "cleanURLs": false
   },
   "pages": {
+     "releases" : {},
      "about" : {"location" : "pages/about.md"},
      "shows" : {"location" : "pages/shows.md"}
   },
   "releases": {
-    "release-title": {
+    "example-release": {
+      "title" : "Cosmic Voyage",
       "playlist" : "releases/example-release/tracklist.jspf",
       "artwork" : "releases/example-release/artwork.jpg",
       "notes" : "releases/example-release/notes.md"  
     },
-    "another-release": {
-      "playlist" : "releases/another-release/tracklist.jspf",
-      "artwork" : "releases/another-release/artwork.jpg",
-      "notes" : "releases/another-release/notes.md"          
+    "example-release-two": {
+      "title" : "Bird Life",
+      "playlist" : "releases/example-release-two/tracklist.jspf",
+      "artwork" : "releases/example-release-two/artwork.jpg",
+      "notes" : "releases/example-release-two/notes.md"  
     }
   }
 }
