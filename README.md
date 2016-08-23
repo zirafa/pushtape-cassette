@@ -117,7 +117,7 @@ release/[release-title] | Displays all the information for a single release: art
 Problem | Steps
 --- | ---
 Blank page or missing CSS/JS | Double check your base url in index.html. If you have trouble figuring out the right path, sometimes the server path can be inferred using Chrome inspector.
-Cross-origin request problems, remote content not loading | When dealing with remote cross-origin requests valid JSONP must be returned and requests need to be formatted correctly. 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=? 2: The response from the server must be JSONP, not just regular JSON. In particular, cross-origin issues may arise when remotely loading cassette.json, jspf, notes.md, and pages.md. Alternatively you can just load all assets locally to avoid having to setup a JSONP workaround.
+Cross-origin request problems (remote content not loading) | When dealing with remote cross-origin requests valid JSONP must be returned and requests need to be formatted correctly. 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=? 2: The response from the server must be JSONP, not just regular JSON. In particular, cross-origin issues may arise when remotely loading cassette.json, jspf, notes.md, and pages.md. Alternatively you can just load all assets locally to avoid having to setup a JSONP workaround.
 
 
 
