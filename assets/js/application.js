@@ -1,25 +1,30 @@
-﻿
-var templates = {};
+﻿// The path to cassette.json. When dealing with remote cross-origin
+// requests JSONP must be returned and requests formatted correctly.
+// 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=?
+// 2. The response from the server must be JSONP, not just regular JSON.
+// - For notes and pages, set the format to json and make sure the above two rules apply.
+var cassettePath = 'http://pushtape.com/demo/drupal/pushtape/services/cassette?callback=?';
 
-// Main menu list item
-templates.menuItem = '<li><a href="{{pageName}}" data-navigo>{{pageName}}</a></li>';
-
-// Pushtape Player controls markup
-templates.playAll = '<a class="pt-play-all" href="#" title="Play/Pause"><span class="play-btn"><i class="fa fa-play"></i></span><span class="pause-btn"><i class="fa fa-pause"></i></span></a>';
-  
 (function ($) {
   "use strict";
   
-  var cassette = {};
+  var cassette = {};  
 
+  // Micromustache templates (main menu list item, pushtape playAll markup
+  var templates = {
+    'menuItem' : '<li><a href="{{pageName}}" data-navigo>{{pageName}}</a></li>',
+    'playAll' : '<a class="pt-play-all" href="#" title="Play/Pause"><span class="play-btn"><i class="fa fa-play"></i></span><span class="pause-btn"><i class="fa fa-pause"></i></span></a>'
+  };
+    
   // The following line disables browser caching
   $.ajaxSetup({ cache: false });
   
   // Fetch the cassette.json config file and store it in an object
-  var cassetteXHR = $.getJSON('cassette.json', function(json){})
+  var cassetteXHR = $.getJSON(cassettePath, function(json){})
     .fail(function(json, status) {
       console.log('Fatal error. Could not load cassette.json.' + '(' + status + ')');
       console.log(json);
+      $('#content').html('<h1>Error</h1> Problem loading cassette.json. Check that the path exists and is accessible from your domain, and that your JSON/JSONP is formatted correctly.');
     });
   
   /**
@@ -129,11 +134,27 @@ templates.playAll = '<a class="pt-play-all" href="#" title="Play/Pause"><span cl
           document.title = docTitle + ' | ' + stripTags(markup.title);             
           binding.contentHTML = markup.title + markup.artwork  + markup.tracklist;
           if (release.hasOwnProperty('notes')) {
-            var jqxhr = $.get(release.notes)
-              .done(function(data) {
-                markup.notes += marked(data);
-                binding.contentHTML += markup.notes;  
-              });
+            // Because of cross-origin restrictions, a simple HTML/Markdown file cannot
+            // be returned for a remote AJAX request. For these situations you must return
+            // valid JSONP, which is supported here. In cassette.json
+            // specify the format as json. The first value of your key:value
+            // pair will be used. Example: {'response' : 'My HTML/Markup blob here'}
+            if (release.notes.format == 'json') {
+              var jqxhr = $.getJSON(release.notes.location)
+                .done(function(data) {
+                  // We only care about the first key:value pair.
+                  var key = Object.keys(data)[0];
+                  markup.notes += marked(data[key]);
+                  binding.contentHTML += markup.notes;  
+                });              
+            }
+            else {
+              var jqxhr = $.get(release.notes.location)
+                .done(function(data) {
+                  markup.notes += marked(data);
+                  binding.contentHTML += markup.notes;  
+                });
+            }
           }
       });   
     }      
@@ -159,24 +180,48 @@ templates.playAll = '<a class="pt-play-all" href="#" title="Play/Pause"><span cl
       return '<a class="release navigo-delegate" href="'+ releaseURL +'">' + markup.artwork + '<h3 class="release-title">' + markup.title + '</h3>' + '</a>';
     }  
     
-    
     // Setup static pages as first level routes
     var pages = {};
     $.each(cassette.pages, function(index, value) {
       pages[String(index)] = function(){
-        var jqxhr = $.get(value.location)
-          .done(function(data) {
-            window.scrollTo(0, 0);
-            binding.contentHTML = data;
-            document.title = docTitle + ' | ' + decodeURI(index);
-            $('#main-menu li a').removeClass('active');
-            $('a[href="' + String(index) + '"]').addClass('active');
-          })
-          .fail(function(data, status) {
-            binding.contentHTML = '<h1>Error</h1> Problem loading page. (' + status + ')';
-          })
-          .always(function() {
-          });  
+        // Because of cross-origin restrictions, a simple HTML/Markdown file cannot
+        // be returned in an AJAX request. For these situations you must return
+        // valid JSON, so we provide that possibility here. In cassette.json
+        // specify the format as json. The first value of your key:value
+        // pair will be used. Example: {'response' : 'My HTML/Markup blob here'}
+        if (value.format == 'json') {
+          var jqxhr = $.getJSON(value.location)
+            .done(function(data) {
+              window.scrollTo(0, 0);
+              // We only care about the first key:value pair.
+              var key = Object.keys(data)[0];
+              binding.contentHTML = data[key];
+              document.title = docTitle + ' | ' + decodeURI(index);
+              $('#main-menu li a').removeClass('active');
+              $('a[href="' + String(index) + '"]').addClass('active');
+            })
+            .fail(function(data, status) {
+              binding.contentHTML = '<h1>Error</h1> Problem loading page. (' + status + ')';
+            })
+            .always(function() {
+            });              
+        }
+        else {
+          var jqxhr = $.get(value.location)
+            .done(function(data) {
+              window.scrollTo(0, 0);
+              binding.contentHTML = data;
+              document.title = docTitle + ' | ' + decodeURI(index);
+              $('#main-menu li a').removeClass('active');
+              $('a[href="' + String(index) + '"]').addClass('active');
+            })
+            .fail(function(data, status) {
+              binding.contentHTML = '<h1>Error</h1> Problem loading page. (' + status + ')';
+            })
+            .always(function() {
+            });  
+        }
+      
       }
     });
     // Setup releases landing page
