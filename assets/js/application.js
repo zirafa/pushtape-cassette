@@ -189,7 +189,7 @@ var cassettePath = 'cassette.json';
         // valid JSON, so we provide that possibility here. In cassette.json
         // specify the format as json. The first value of your key:value
         // pair will be used. Example: {'response' : 'My HTML/Markup blob here'}
-        if (value.hasOwnProperty('value') && value.format == 'json') {
+        if (value.hasOwnProperty('format') && value.format == 'json') {
           var jqxhr = $.getJSON(value.location)
             .done(function(data) {
               window.scrollTo(0, 0);
