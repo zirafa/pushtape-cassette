@@ -23,7 +23,7 @@ A lot of music sites are fairly static but have tricky frontend requirements. Th
 # Setup
 
 ## Installation
-- Unzip all files to the document root on your web server.
+- Unzip all files to the document root on your web server. Check the base URL tag in index.html (details below).
 - Open up cassette.json to manually modify the site's configuration. (@@TODO: Provide example of how to generate cassette.json with a script.)
 
 ## Base URL
