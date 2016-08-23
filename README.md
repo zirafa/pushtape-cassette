@@ -65,12 +65,12 @@ Property | Type | Description
 lastBuild | timestamp | A way to track when the file was last built or modified.
 settings.homePage | string | This value specifies what page should load by default. The path must be registered in the JS router.
 settings.cleanURLs | boolean | If false, hash # urls are used. If true, the History API will handle clean URLs.
-pages | object | Contains key:value pairs for static pages on your site. The key defines the first level JS router path, i.e. 'about'. The value then specifies the URL location for a markdown document. The URL can be relative or absolute.
-releases | object | Contains key:value pairs defining the music releases available. A key defines the JS router path and should be all lower case with no spaces, i.e. album-title. The fully generated path ends up being release/album-title. The corresponding value defines the properties for this release. At a minimum you should specify the URL for artwork.jpg and notes.md (relative or absolute). The playlist property needs to be a path to a valid [JSPF](http://www.xspf.org/jspf/) playlist file, which specifies the track order and location of mp3 files, and any other metadata.
+pages | object | Contains key:value pairs for static pages on your site. The key defines the first level JS router path, i.e. 'about'. The value contains the URL location for a markdown document. The URL can be relative or absolute. If your server is returning documents using JSON/JSONP, set "format" : "json".
+releases | object | Contains key:value pairs defining the music releases available. A key defines the JS router path and should be all lower case with no spaces, i.e. album-title. The fully generated path ends up being release/album-title. The corresponding value defines the properties for this release. At a minimum you should specify the URL for artwork.jpg and notes.md (relative or absolute, optionally can specify format as json). The playlist property needs to be a path to a valid [JSPF](http://www.xspf.org/jspf/) playlist file, which specifies the track order and location of mp3 files, and any other metadata.
 
 Known issues:
 - The releases path is a reserved JS route used to list all the available releases, and is the default homepage.
-- In some instances local environments will not be able to load remote assets because of cross-origin request limitations. You may need to host those assets locally, otherwise running the web app on a web server should resolve any issues.
+- In some instances local environments will not be able to load remote assets because of cross-origin request limitations. You may need to host those assets locally, otherwise running the web app on a web server should resolve any issues. If you further encounter problems, see the note about JSONP below.
 
 Limitations:
 - Because this project aims to present a static UX, you will likely run into limitations if you want more dynamic functionality. You can always try mixing dynamic assets into markdown, or for the more technically advanced you can try modifying application.js to suit your needs.
@@ -113,8 +113,11 @@ URL Path | Description
 releases | A list of all releases with artwork and name, hyperlinked to the individual release page.
 release/[release-title] | Displays all the information for a single release: artwork, playable tracklist, and notes.
 
-
-
+## Troubleshooting
+Problem | Steps
+--- | ---
+Blank page or missing CSS/JS | Double check your base url in index.html. If you have trouble figuring out the right path, sometimes the server path can be inferred using Chrome inspector.
+Cross-origin request problems | When dealing with remote cross-origin requests valid JSONP must be returned and requests need to be formatted correctly. 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=? 2: The response from the server must be JSONP, not just regular JSON. In particular, cross-origin issues may arise when remotely loading cassette.json, jspf, notes.md, and pages.md. Alternatively you can just load all assets locally to avoid having to setup a JSONP workaround.
 
 
 
