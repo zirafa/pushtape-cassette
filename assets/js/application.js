@@ -139,7 +139,7 @@ var cassettePath = 'cassette.json';
             // valid JSONP, which is supported here. In cassette.json
             // specify the format as json. The first value of your key:value
             // pair will be used. Example: {'response' : 'My HTML/Markup blob here'}
-            if (release.notes.format == 'json') {
+            if (release.notes.hasOwnProperty('format') && release.notes.format == 'json') {
               var jqxhr = $.getJSON(release.notes.location)
                 .done(function(data) {
                   // We only care about the first key:value pair.
@@ -149,7 +149,7 @@ var cassettePath = 'cassette.json';
                 });              
             }
             else {
-              var jqxhr = $.get(release.notes.location)
+              var jqxhr = $.get(release.notes)
                 .done(function(data) {
                   markup.notes += marked(data);
                   binding.contentHTML += markup.notes;  
@@ -189,7 +189,7 @@ var cassettePath = 'cassette.json';
         // valid JSON, so we provide that possibility here. In cassette.json
         // specify the format as json. The first value of your key:value
         // pair will be used. Example: {'response' : 'My HTML/Markup blob here'}
-        if (value.format == 'json') {
+        if (value.hasOwnProperty('value') && value.format == 'json') {
           var jqxhr = $.getJSON(value.location)
             .done(function(data) {
               window.scrollTo(0, 0);
