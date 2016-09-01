@@ -1,8 +1,10 @@
-﻿// The path to cassette.json. When dealing with remote cross-origin
-// requests JSONP must be returned and requests formatted correctly.
-// 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=?
-// 2. The response from the server must be JSONP, not just regular JSON.
-// - For notes and pages, set the format to json and make sure the above two rules apply.
+﻿/**
+ * The path to cassette.json. You can override this path by defining window.cassettePath before loading this script.
+ * When dealing with remote cross-origin requests JSONP must be returned and requests formatted correctly:
+ * 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=? 
+ * 2. The response from the server must be JSONP, not just regular JSON. This is true for JSPF endpoints as well.
+ * - For notes and pages, set the format to json and make sure the above two rules apply.
+ */
 if (typeof cassettePath == 'undefined') {
   var cassettePath = 'cassette.json';
 }

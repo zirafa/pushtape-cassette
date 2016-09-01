@@ -68,12 +68,16 @@ settings.cleanURLs | boolean | If false, hash # urls are used. If true, the Hist
 pages | object | Contains key:value pairs for static pages on your site. The key defines the first level JS router path, i.e. 'about'. The value contains the URL location for a markdown document. The URL can be relative or absolute. If your server is returning documents using JSON/JSONP, set "format" : "json".
 releases | object | Contains key:value pairs defining the music releases available. A key defines the JS router path and should be all lower case with no spaces, i.e. album-title. The fully generated path ends up being release/album-title. The corresponding value defines the properties for this release. At a minimum you should specify the URL for artwork.jpg and notes.md (relative or absolute, optionally can specify format as json). The playlist property needs to be a path to a valid [JSPF](http://www.xspf.org/jspf/) playlist file, which specifies the track order and location of mp3 files, and any other metadata.
 
+Overriding cassettePath:
+By default, application.js will load the local cassette.json path. Define window.cassettePath before loading application.js to override the path to cassette.json.
+
 Known issues:
 - The releases path is a reserved JS route used to list all the available releases, and is the default homepage.
 - In some instances local environments will not be able to load remote assets because of cross-origin request limitations. You may need to host those assets locally, otherwise running the web app on a web server should resolve any issues. If you further encounter problems, see the note about JSONP below.
 
 Limitations:
 - Because this project aims to present a static UX, you will likely run into limitations if you want more dynamic functionality. You can always try mixing dynamic assets into markdown, or for the more technically advanced you can try modifying application.js to suit your needs.
+
 
 Example cassette.json:
 ```
