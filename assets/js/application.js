@@ -3,7 +3,9 @@
 // 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=?
 // 2. The response from the server must be JSONP, not just regular JSON.
 // - For notes and pages, set the format to json and make sure the above two rules apply.
-var cassettePath = 'cassette.json';
+if (typeof cassettePath == 'undefined') {
+  var cassettePath = 'cassette.json';
+}
 
 (function ($) {
   "use strict";
