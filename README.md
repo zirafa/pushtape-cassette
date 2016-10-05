@@ -65,7 +65,7 @@ Property | Type | Description
 lastBuild | timestamp | A way to track when the file was last built or modified.
 settings.homePage | string | This value specifies what page should load by default. The path must be registered in the JS router.
 settings.cleanURLs | boolean | If false, hash # urls are used. If true, the History API will handle clean URLs.
-pages | object | Contains key:value pairs for static pages on your site. The key defines the first level JS router path, i.e. 'about'. The value contains the URL location for a markdown document. The URL can be relative or absolute. If your server is returning documents using JSON/JSONP, set "format" : "json".
+pages | object | Contains key:value pairs for static pages on your site. The key defines the first level JS router path, i.e. 'about'. The value contains the URL location for a markdown document. The URL can be relative or absolute. If your server is returning documents using JSON/JSONP, set "format" : "json". If you need to include an external link and bypass the JS router, set "type" : "external".
 releases | object | Contains key:value pairs defining the music releases available. A key defines the JS router path and should be all lower case with no spaces, i.e. album-title. The fully generated path ends up being release/album-title. The corresponding value defines the properties for this release. At a minimum you should specify the URL for artwork.jpg and notes.md (relative or absolute, optionally can specify format as json). The playlist property needs to be a path to a valid [JSPF](http://www.xspf.org/jspf/) playlist file, which specifies the track order and location of mp3 files, and any other metadata.
 
 Overriding cassettePath:
@@ -90,7 +90,8 @@ Example cassette.json:
   "pages": {
      "releases" : {},
      "about" : {"location" : "pages/about.md"},
-     "shows" : {"location" : "pages/shows.md"}
+     "shows" : {"location" : "pages/shows.md"},
+     "external-link" : {"location" : "http://www.example.com", type : "external"}
   },
   "releases": {
     "example-release": {

@@ -1,7 +1,7 @@
 ﻿/**
  * The path to cassette.json. You can override this path by defining window.cassettePath before loading this script.
  * When dealing with remote cross-origin requests JSONP must be returned and requests formatted correctly:
- * 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=? 
+ * 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=?
  * 2. The response from the server must be JSONP, not just regular JSON. This is true for JSPF endpoints as well.
  * - For notes and pages, set the format to json and make sure the above two rules apply.
  */
@@ -11,18 +11,19 @@ if (typeof cassettePath == 'undefined') {
 
 (function ($) {
   "use strict";
-  
-  var cassette = {};  
+
+  var cassette = {};
 
   // Micromustache templates (main menu list item, pushtape playAll markup
   var templates = {
-    'menuItem' : '<li><a href="{{pageName}}" data-navigo>{{pageName}}</a></li>',
+    'menuItem' : '<li><a href="{{pageURL}}" data-navigo>{{pageTitle}}</a></li>',
+    'externalMenuItem' : '<li><a target="_blank" href="{{pageURL}}">{{pageTitle}}</a></li>',
     'playAll' : '<a class="pt-play-all" href="#" title="Play/Pause"><span class="play-btn"><i class="fa fa-play"></i></span><span class="pause-btn"><i class="fa fa-pause"></i></span></a>'
   };
-    
+
   // The following line disables browser caching
   $.ajaxSetup({ cache: false });
-  
+
   // Fetch the cassette.json config file and store it in an object
   var cassetteXHR = $.getJSON(cassettePath, function(json){})
     .fail(function(json, status) {
@@ -30,14 +31,14 @@ if (typeof cassettePath == 'undefined') {
       console.log(json);
       $('#content').html('<h1>Error</h1> Problem loading cassette.json. Check that the path exists and is accessible from your domain, and that your JSON/JSONP is formatted correctly.');
     });
-  
+
   /**
    * Use XHR promise to store cassette.json as a JS object
    */
   cassetteXHR.done(function(json){
     cassette = json;
     var docTitle = document.title;
-    
+
     /**
      * Setup data binding.
      * https://github.com/remy/bind.js
@@ -49,11 +50,21 @@ if (typeof cassettePath == 'undefined') {
       pages: {
         dom: '#main-menu',
         transform: function (value) {
-          var variables = {
-            pageName: this.safe(value),
-          };
-          var output = micromustache.render(templates.menuItem, variables);
-          return decodeEntities(output);    
+          var output;
+          var variables = {};
+          variables.pageURL = this.safe(value);
+          variables.pageTitle = this.safe(value);
+          if (cassette.pages[value].hasOwnProperty('title')) {
+            variables.pageTitle = cassette.pages[value].title;
+          }
+          if (cassette.pages[value].hasOwnProperty('type') && cassette.pages[value].type == 'external') {
+            variables.pageURL = cassette.pages[value].location;
+            output = micromustache.render(templates.externalMenuItem, variables);
+          }
+          else {
+            output = micromustache.render(templates.menuItem, variables);
+          }
+          return decodeEntities(output);
         }
       },
       contentHTML: {
@@ -64,7 +75,7 @@ if (typeof cassettePath == 'undefined') {
         }
       }
     });
-  
+
     // Pass root and other values based on cassette.json
     // Setup Router :: https://github.com/krasimir/navigo
     var router = new Navigo(null, !cassette.settings.cleanURLs);
@@ -75,19 +86,19 @@ if (typeof cassettePath == 'undefined') {
     });
     $('body').on('click', 'a[data-navigo], .navigo-delegate', function(e){
       $('#main-menu li a').removeClass('active');
-      $(this).addClass('active');      
+      $(this).addClass('active');
     });
     $('body').on('click', '.mobile-menu-toggle', function(){
-      $('#main-menu').toggleClass('hide');  
+      $('#main-menu').toggleClass('hide');
     });
-    
-     
+
+
     /**
      *
      * Callback function that handles both release and track routes
-     * 
+     *
      * @params params passed through the navigo router
-     * 
+     *
      * @return HTML markup
      */
     var releaseMarkup = function(params) {
@@ -97,7 +108,7 @@ if (typeof cassettePath == 'undefined') {
       var playlist;
       var releaseURL = 'release/' + params.title;
       var jqxhr = $.getJSON(release.playlist, function() {
-        
+
       })
       .done(function(json) {
           playlist = json.playlist;
@@ -123,7 +134,7 @@ if (typeof cassettePath == 'undefined') {
             $.each(playlist.track, function(index, value){
               var artist = '';
               if (value.hasOwnProperty('creator')) {
-                artist = '<span class="artist">' + value.creator + '</span>';    
+                artist = '<span class="artist">' + value.creator + '</span>';
               }
               if (params.hasOwnProperty('trackNumber') && params.trackNumber == trackId) {
                  markup.tracklist += '<li class="highlight"><a data-pushtape-permalink = "release/' + params.title + '/track/'+trackId+'" data-pushtape-sound-id ="'+ params.title +'_'+ trackId +'" href="'+ value.location + '">' + value.title + artist + '</a></li>\n';
@@ -135,7 +146,7 @@ if (typeof cassettePath == 'undefined') {
             });
             markup.tracklist += '</ul>';
           }
-          document.title = docTitle + ' | ' + stripTags(markup.title);             
+          document.title = docTitle + ' | ' + stripTags(markup.title);
           binding.contentHTML = markup.title + markup.artwork  + markup.tracklist;
           if (release.hasOwnProperty('notes')) {
             // Because of cross-origin restrictions, a simple HTML/Markdown file cannot
@@ -149,26 +160,26 @@ if (typeof cassettePath == 'undefined') {
                   // We only care about the first key:value pair.
                   var key = Object.keys(data)[0];
                   markup.notes += marked(data[key]);
-                  binding.contentHTML += markup.notes;  
-                });              
+                  binding.contentHTML += markup.notes;
+                });
             }
             else {
               var jqxhr = $.get(release.notes)
                 .done(function(data) {
                   markup.notes += marked(data);
-                  binding.contentHTML += markup.notes;  
+                  binding.contentHTML += markup.notes;
                 });
             }
           }
-      });   
-    }      
+      });
+    }
 
     /**
      *
      * Callback function that handles release landing page markup
-     * 
+     *
      * @params releaseTitle title of individual release
-     * 
+     *
      * @return HTML markup
      */
     var allReleasesMarkup = function(releaseTitle) {
@@ -178,12 +189,12 @@ if (typeof cassettePath == 'undefined') {
       var playlist;
       var releaseURL = 'release/' + releaseTitle;
       if (release.hasOwnProperty('title')) {
-        markup.title = release.title;  
+        markup.title = release.title;
       }
       markup.artwork += '<div class="artwork thumbnail"><img src="' + release.artwork + '"/></div>';
       return '<a class="release navigo-delegate" href="'+ releaseURL +'">' + markup.artwork + '<h3 class="release-title">' + markup.title + '</h3>' + '</a>';
-    }  
-    
+    }
+
     // Setup static pages as first level routes
     var pages = {};
     $.each(cassette.pages, function(index, value) {
@@ -208,7 +219,7 @@ if (typeof cassettePath == 'undefined') {
               binding.contentHTML = '<h1>Error</h1> Problem loading page. (' + status + ')';
             })
             .always(function() {
-            });              
+            });
         }
         else {
           var jqxhr = $.get(value.location)
@@ -223,9 +234,9 @@ if (typeof cassettePath == 'undefined') {
               binding.contentHTML = '<h1>Error</h1> Problem loading page. (' + status + ')';
             })
             .always(function() {
-            });  
+            });
         }
-      
+
       }
     });
     // Setup releases landing page
@@ -244,14 +255,14 @@ if (typeof cassettePath == 'undefined') {
       document.title = docTitle + ' | ' + 'releases';
       $('#main-menu li a').removeClass('active');
       $('a[href="releases"]').addClass('active');
-    }    
+    }
     // Setup routes for releases
     pages['release/:title/track/:trackNumber'] = function (params) {
-      releaseMarkup(params);       
-    }    
+      releaseMarkup(params);
+    }
     // Setup routes for releases
     pages['release/:title'] = function (params) {
-      releaseMarkup(params);      
+      releaseMarkup(params);
     }
     // Setup wildcard route for static pages and homepage
     pages['*'] = function(params) {
@@ -275,11 +286,11 @@ if (typeof cassettePath == 'undefined') {
     textArea.innerHTML = encodedString;
     return textArea.value;
   }
-  
+
   /**
    * Convert HTML to plain text
-   * 
-   * @param dirtyString 
+   *
+   * @param dirtyString
    * @return plain text string
    */
   var stripTags = function(dirtyString) {
