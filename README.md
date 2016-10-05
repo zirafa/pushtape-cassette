@@ -91,7 +91,7 @@ Example cassette.json:
      "releases" : {},
      "about" : {"location" : "pages/about.md"},
      "shows" : {"location" : "pages/shows.md"},
-     "external-link" : {"location" : "http://www.example.com", type : "external"}
+     "external-link" : {"title": "Soundcloud", "location" : "http://www.example.com", type : "external"}
   },
   "releases": {
     "example-release": {
