@@ -1,5 +1,5 @@
 # Pushtape Cassette
-Pushtape Cassette is a decoupled frontend framework for building better music web applications.
+Pushtape Cassette is a lightweight frontend framework for building better music web applications. Make a cassette of your music and render a complete music web app in seconds, featuring a persistent music player.
 
 ## About
 This project provides a skeletal static frontend for building music web applications that can be integrated with any number of backend technologies: flat files, Wordpress/Drupal, JS Frameworks, Python, and Ruby. The key element that powers this idea is the cassette.json file, a [portable discography format](https://github.com/zirafa/discography-yaml). This file acts like a single comprehensive endpoint - and from that single point, javascript is used to create a single-page-application framework using various micro-libraries. 
@@ -16,9 +16,11 @@ I chose micro-libraries because the requirements for rendering a static music ap
 - [Pushtape-player.js - customizable JS audio page player with global controls](https://github.com/zirafa/pushtape-player.js)
 - [Bootstrap grid-only](https://github.com/zirafa/bootstrap-grid-only)
 
-
 ## Why did I make this?
 A lot of music sites are fairly static but have tricky frontend requirements. The best music UX allows for an uninterrupted music listening experience while performing other tasks such as reading liner notes, browsing other music, etc. Usually this means AJAXifying a traditional CMS/static site or building a complete solution from scratch using JS. This quickly becomes a headache to build and maintain, especially in the long term. By creating a decoupled frontend framework, it allows for better separation of concerns and lowers the long-term effort required to build and maintain a site. Additionally, by leveraging [JSPF](http://www.xspf.org/jspf/) and cassette.json, a [portable discography format](https://github.com/zirafa/discography-yaml), data portability is not an afterthought - it is built into the application from the beginning.
+
+## Tutorials
+[Build a static website using only Pushtape Cassette + Github Pages + Dropbox](http://zirafaworks.com/note/build-static-music-website-pushtape-cassette-github-pages)
 
 # Setup
 
