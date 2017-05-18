@@ -113,14 +113,16 @@ Example cassette.json:
 ```
 
 ## Default Routes
+
 URL Path | Description
-------- | -----------
-* | If no path is entered, the default homepage is loaded (defined in cassette.json).
-[page-title] | This parses and displays the markdown for a page as defined in cassette.json.
-releases | A list of all releases with artwork and name, hyperlinked to the individual release page.
-release/[release-title] | Displays all the information for a single release: artwork, playable tracklist, and notes.
+-------- | -----------
+/ | If no path is entered, the default homepage is loaded (defined in cassette.json).
+/[page-title] | This parses and displays the markdown for a page as defined in cassette.json.
+/releases | A list of all releases with artwork and name, hyperlinked to the individual release page.
+/release/[release-title] | Displays all the information for a single release: artwork, playable tracklist, and notes.
 
 ## Troubleshooting
+
 Problem | Steps
 --- | ---
 Blank page or missing CSS/JS | Double check your base url in index.html. If you have trouble figuring out the right path, sometimes the server path can be inferred using Chrome inspector.
