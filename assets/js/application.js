@@ -1,21 +1,24 @@
 ﻿/**
- * The path to cassette.json. You can override this path by defining window.cassettePath before loading this script.
- * When dealing with remote cross-origin requests JSONP must be returned and requests formatted correctly:
+ * You can override the cassette.json path using settings defined before loading this script.
+ * Note that when dealing with remote cross-origin requests JSONP must be returned and requests formatted correctly:
  * 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=?
  * 2. The response from the server must be JSONP, not just regular JSON. This is true for JSPF endpoints as well.
  * - For notes and pages, set the format to json and make sure the above two rules apply.
  */
-if (typeof cassettePath == 'undefined') {
-  var cassettePath = 'cassette.json';
+if (typeof app == 'undefined') {
+  var app = {};
+  app.settings = {
+    'cassettePath' : 'cassette.json',  // Path to cassette.json
+    'cleanURLs' : false,               // if true, # will be removed from URL paths
+    'homePage' : 'releases'            // Default menu route for homepage
+  }
 }
 
 (function ($) {
   "use strict";
-
-  var cassette = {};
-
+  
   // Micromustache templates (main menu list item, pushtape playAll markup
-  var templates = {
+  app.templates = {
     'menuItem' : '<li><a href="{{pageURL}}" data-navigo>{{pageTitle}}</a></li>',
     'externalMenuItem' : '<li><a target="_blank" href="{{pageURL}}">{{pageTitle}}</a></li>',
     'playAll' : '<a class="pt-play-all" href="#" title="Play/Pause"><span class="play-btn"><i class="fa fa-play"></i></span><span class="pause-btn"><i class="fa fa-pause"></i></span></a>'
@@ -25,7 +28,7 @@ if (typeof cassettePath == 'undefined') {
   $.ajaxSetup({ cache: false });
 
   // Fetch the cassette.json config file and store it in an object
-  var cassetteXHR = $.getJSON(cassettePath, function(json){})
+  var cassetteXHR = $.getJSON(app.settings.cassettePath, function(json){})
     .fail(function(json, status) {
       console.log('Fatal error. Could not load cassette.json.' + '(' + status + ')');
       console.log(json);
@@ -36,7 +39,7 @@ if (typeof cassettePath == 'undefined') {
    * Use XHR promise to store cassette.json as a JS object
    */
   cassetteXHR.done(function(json){
-    cassette = json;
+    app.cassette = json;
     var docTitle = document.title;
 
     /**
@@ -44,7 +47,7 @@ if (typeof cassettePath == 'undefined') {
      * https://github.com/remy/bind.js
      */
     var binding = Bind({
-      pages: cassette.hasOwnProperty('pages') ? Object.keys(cassette.pages) : '',
+      pages: app.cassette.hasOwnProperty('pages') ? Object.keys(app.cassette.pages) : '',
       contentHTML: ''
     }, {
       pages: {
@@ -54,15 +57,15 @@ if (typeof cassettePath == 'undefined') {
           var variables = {};
           variables.pageURL = this.safe(value);
           variables.pageTitle = this.safe(value);
-          if (cassette.pages[value].hasOwnProperty('title')) {
-            variables.pageTitle = cassette.pages[value].title;
+          if (app.cassette.pages[value].hasOwnProperty('title')) {
+            variables.pageTitle = app.cassette.pages[value].title;
           }
-          if (cassette.pages[value].hasOwnProperty('type') && cassette.pages[value].type == 'external') {
-            variables.pageURL = cassette.pages[value].location;
-            output = micromustache.render(templates.externalMenuItem, variables);
+          if (app.cassette.pages[value].hasOwnProperty('type') && app.cassette.pages[value].type == 'external') {
+            variables.pageURL = app.cassette.pages[value].location;
+            output = micromustache.render(app.templates.externalMenuItem, variables);
           }
           else {
-            output = micromustache.render(templates.menuItem, variables);
+            output = micromustache.render(app.templates.menuItem, variables);
           }
           return decodeEntities(output);
         }
@@ -78,7 +81,7 @@ if (typeof cassettePath == 'undefined') {
 
     // Pass root and other values based on cassette.json
     // Setup Router :: https://github.com/krasimir/navigo
-    var router = new Navigo(null, !cassette.settings.cleanURLs);
+    var router = new Navigo(null, !app.settings.cleanURLs);
 
     $('body').on('click', '.navigo-delegate', function(e){
       e.preventDefault();
@@ -102,15 +105,22 @@ if (typeof cassettePath == 'undefined') {
      * @return HTML markup
      */
     var releaseMarkup = function(params) {
-      window.scrollTo(0, 0);
+      var route = params.title;
+      if (params.artist) {
+        route = params.artist + '/' + params.title;  
+      }
       var markup = {'title': decodeURI(params.title), 'artwork':'', 'tracklist': '', 'notes':''};
-      var release = cassette.releases[decodeURI(params.title)];
+      var release = app.cassette.releases[decodeURI(route)];
       var playlist;
-      var releaseURL = 'release/' + params.title;
+      var releaseURL = 'release/' + route;
       var jqxhr = $.getJSON(release.playlist, function() {
 
       })
       .done(function(json) {
+          var route = params.title;
+          if (params.artist) {
+            route = params.artist + '/' + params.title;  
+          }         
           playlist = json.playlist;
           var creator = '';
           // Uncomment the following to show the playlist's creator
@@ -120,10 +130,10 @@ if (typeof cassettePath == 'undefined') {
           }
           */
           if (playlist.hasOwnProperty('title') && playlist.title.length > 0) {
-            markup.title = '<h1 class="title">'+ templates.playAll +' <a class="navigo-delegate" href="'+ releaseURL +'">'+ playlist.title + creator + '</a></h1>\n';
+            markup.title = '<h1 class="title">'+ app.templates.playAll +' <a class="navigo-delegate" href="'+ releaseURL +'">'+ playlist.title + creator + '</a></h1>\n';
           }
           else {
-            markup.title = '<h1 class="title">'+ templates.playAll +' <a class="navigo-delegate" href="'+ params.title +'">'+ playlist.title + creator + '</a></h1>\n';
+            markup.title = '<h1 class="title">'+ app.templates.playAll +' <a class="navigo-delegate" href="'+ route +'">'+ playlist.title + creator + '</a></h1>\n';
           }
           if (release.hasOwnProperty('artwork') && release.artwork.length > 0) {
             markup.artwork += '<div class="artwork"><img src="' + release.artwork + '"/></div>';
@@ -137,10 +147,10 @@ if (typeof cassettePath == 'undefined') {
                 artist = '<span class="artist">' + value.creator + '</span>';
               }
               if (params.hasOwnProperty('trackNumber') && params.trackNumber == trackId) {
-                 markup.tracklist += '<li class="highlight"><a data-pushtape-permalink = "release/' + params.title + '/track/'+trackId+'" data-pushtape-sound-id ="'+ params.title +'_'+ trackId +'" href="'+ value.location + '">' + value.title + artist + '</a></li>\n';
+                 markup.tracklist += '<li class="highlight"><a data-pushtape-permalink = "release/' + route + '/track/'+trackId+'" data-pushtape-sound-id ="'+ params.title +'_'+ trackId +'" href="'+ value.location + '">' + value.title + artist + '</a></li>\n';
               }
               else {
-                markup.tracklist += '<li><a data-pushtape-permalink = "release/' + params.title + '/track/'+trackId+'" data-pushtape-sound-id ="'+ params.title +'_'+ trackId +'" href="'+ value.location + '">' + value.title + artist + '</a></li>\n';
+                markup.tracklist += '<li><a data-pushtape-permalink = "release/' + route + '/track/'+trackId+'" data-pushtape-sound-id ="'+ params.title +'_'+ trackId +'" href="'+ value.location + '">' + value.title + artist + '</a></li>\n';
               }
               trackId++;
             });
@@ -185,7 +195,7 @@ if (typeof cassettePath == 'undefined') {
     var allReleasesMarkup = function(releaseTitle) {
       window.scrollTo(0, 0);
       var markup = {'title': decodeURI(releaseTitle), 'artwork':''};
-      var release = cassette.releases[decodeURI(releaseTitle)];
+      var release = app.cassette.releases[decodeURI(releaseTitle)];
       var playlist;
       var releaseURL = 'release/' + releaseTitle;
       if (release.hasOwnProperty('title')) {
@@ -197,7 +207,7 @@ if (typeof cassettePath == 'undefined') {
 
     // Setup static pages as first level routes
     var pages = {};
-    $.each(cassette.pages, function(index, value) {
+    $.each(app.cassette.pages, function(index, value) {
       pages[String(index)] = function(){
         // Because of cross-origin restrictions, a simple HTML/Markdown file cannot
         // be returned in an AJAX request. For these situations you must return
@@ -241,9 +251,9 @@ if (typeof cassettePath == 'undefined') {
     });
     // Setup releases landing page
     pages['releases'] = function(params) {
-      if (cassette.hasOwnProperty('releases') && Object.keys(cassette.releases).length > 0) {
+      if (app.cassette.hasOwnProperty('releases') && Object.keys(app.cassette.releases).length > 0) {
         var markup = '<ul class="release-list">\n';
-        $.each(Object.keys(cassette.releases), function(index, value) {
+        $.each(Object.keys(app.cassette.releases), function(index, value) {
           markup += '<li>' + allReleasesMarkup(value) + '</li>\n';
         });
         markup += '</ul>\n';
@@ -258,17 +268,25 @@ if (typeof cassettePath == 'undefined') {
     }
     // Setup routes for releases
     pages['release/:title/track/:trackNumber'] = function (params) {
-      releaseMarkup(params);
+      releaseMarkup(params);       
     }
     // Setup routes for releases
+    pages['release/:artist/:title/track/:trackNumber'] = function (params) {
+      releaseMarkup(params);       
+    }    
+    // Setup routes for releases
+    pages['release/:artist/:title'] = function (params) {
+      releaseMarkup(params);      
+    } 
+    // Setup routes for releases
     pages['release/:title'] = function (params) {
-      releaseMarkup(params);
+      releaseMarkup(params);      
     }
     // Setup wildcard route for static pages and homepage
     pages['*'] = function(params) {
-      if (cassette.settings.homePage.length > 0) {
-        router.resolve(String(cassette.settings.homePage));
-        $('a[href="' + cassette.settings.homePage + '"]').addClass('active');
+      if (app.settings.homePage.length > 0) {
+        router.resolve(String(app.settings.homePage));
+        $('a[href="' + app.settings.homePage + '"]').addClass('active');
       }
       else {
         // No page specified, try loading a default

@@ -15,11 +15,13 @@
   }
   .release {
     float:left;
-    margin:3rem
+    margin:3rem;
   }
-  .release-list li .artwork {
+  .release-list li .artwork,
+  .release-list li h3 {
     max-width:300px;
     margin:0;
+    float:none;
   }
   ul.menu.hide {
     display:block;

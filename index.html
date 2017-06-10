@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 
     <!-- If installation is in subdir and pages won't load, try altering base href to /subdir/ -->
-    <base href="/"/>
+    <base href="/github/pushtape-cassette-dev/"/>
     
     <title>Pushtape Cassette</title>
     <meta name="description" content="">
@@ -36,10 +36,6 @@
     <link href="assets/css/theme/breakpoints.css" rel="stylesheet" type="text/css" />
 
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script> 
-    <script>
-      // Override path to cassette.json
-      // var cassettePath = 'cassette.json';
-    </script>
   </head>
   
   <body>
@@ -97,6 +93,15 @@
 
     </footer>
     
+    <script>
+      // General app settings
+      var app = {};
+      app.settings = {
+        'cassettePath' : 'cassette.json', // Path to cassette.json (if remote must be jsonp)
+        'cleanURLs' : false, // Set true to remove # from URLs
+        'homePage' : 'releases' // Default menu path for homepage
+      }
+    </script>    
     <script type="text/javascript" src="assets/js/soundmanager2-jsmin.js"></script>    
     <script type="text/javascript" src="assets/js/pushtape-player.js"></script>
     <script type="text/javascript" src="assets/js/pushtape-player.init.js"></script>

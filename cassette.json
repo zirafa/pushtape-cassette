@@ -1,9 +1,5 @@
 {
   "lastBuild": {},
-  "settings": {
-    "homePage": "releases",
-    "cleanURLs": false
-  },
   "pages": {
      "releases" : {},
      "about" : {"location" : "pages/about.md"},
