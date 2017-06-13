@@ -27,7 +27,7 @@ A lot of music sites are fairly static but have tricky frontend requirements. Th
 
 # Quick Start
 
-- Unzip all files to the document root on your web server. Check the base URL tag in index.html and then build cassette.json.
+- Unzip all files to the document root on your web server. Check the base URL tag in index.html and build cassette.json.
 
 ## Base URL
 
@@ -54,11 +54,10 @@ Notes:
 - This script recursively searches through files and folders in the working directory and generates cassette.json as well as any necessary tracklist.jspf files.
 - The .jspf files are stored in _data and the music directories are left untouched.
 - You can use subfolders to organize releases by artist, i.e. ```releases/artist-name/release-name``` 
-- If no artwork file is found, a default-artwork.jpg will be used.
+- If no artwork file is found, assets/images/default-artwork.jpg will be used.
 
 ### Clean URLS
 If you want to remove the hash # from the URL routes and use History API instead, in index.html set app.settings.cleanURLs to true. Note that running the app with History API enabled from document root is encouraged as it takes care of all relative link issues.
-
 
 ## Flat File Example
 
@@ -72,7 +71,6 @@ Note: you can skip steps 3 and 4 if you use the dub.py build script.
 3. Create a tracklist.jspf file for each release, which contains the order of the tracklist, metadata, and file locations (local or remote)
 4. Build cassette.json with the URLs for your new pages and music. 
 5. Visit your new static site. 
-
 
 ## Theme modifications
 
@@ -148,7 +146,3 @@ Problem | Steps
 --- | ---
 Blank page or missing CSS/JS | Double check your base url in index.html. If you have trouble figuring out the right path, sometimes the server path can be inferred using Chrome inspector.
 Cross-origin request problems (remote content not loading) | When dealing with remote cross-origin requests valid JSONP must be returned and requests need to be formatted correctly. 1. You need to pass ?callback=? in the URL, i.e. http://example.com/cassette.json?callback=? 2: The response from the server must be JSONP, not just regular JSON. In particular, cross-origin issues may arise when remotely loading cassette.json, jspf, notes.md, and pages.md. Alternatively you can just load all assets locally to avoid having to setup a JSONP workaround.
-
-
-
-
