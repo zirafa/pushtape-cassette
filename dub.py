@@ -115,7 +115,7 @@ for root, subdirs, files in os.walk(releases_dir):
       artist = ''
     
     tracks = []    
-    for filename in files:
+    for filename in sorted(files):
         file_path = os.path.join(root, filename)
         file_relpath = os.path.relpath(file_path)
 
