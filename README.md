@@ -24,16 +24,24 @@ I chose micro-libraries because the requirements for rendering a static music ap
 
 A lot of music sites are fairly static but have tricky frontend requirements. The best music UX allows for an uninterrupted music listening experience while performing other tasks such as reading liner notes, browsing other music, etc. Usually this means AJAXifying a traditional CMS/static site or building a complete solution from scratch using JS. This quickly becomes a headache to build and maintain, especially in the long term. By creating a decoupled frontend framework, it allows for better separation of concerns and lowers the long-term effort required to build and maintain a site. Additionally, by leveraging [JSPF](http://www.xspf.org/jspf/) and cassette.json, a [portable discography format](https://github.com/zirafa/discography-yaml), data portability is not an afterthought - it is built into the application from the beginning.
 
-## Tutorials
 
-[Build a static website using only Pushtape Cassette + Github Pages + Dropbox](http://zirafaworks.com/note/build-static-music-website-pushtape-cassette-github-pages)
+# Quick Start
 
-# Setup
+- Unzip all files to the document root on your web server. Check the base URL tag in index.html and then build cassette.json.
 
-## Installation
+## Base URL
 
-- Unzip all files to the document root on your web server. Check the base URL tag in index.html (details below).
-- Open up cassette.json to manually modify the site's configuration...or run the build script to automatically scan the working directory for music and pages:
+If you run the app from a subdirectory from document root, in index.html change the base tag to:
+```
+  <base href="/subdirectory/" />
+```
+or alternatively load all assets using absolute paths.
+
+## Cassette.json
+
+- Build cassette.json by manually editing JSON files or run the build script.
+
+- Run the build script to automatically scan the working directory for music and pages and generate cassette.json:
 ```
 $ cd pushtape-cassette
 $ python dub.py
@@ -41,40 +49,28 @@ $ python dub.py
 
 ### Dub.py
 
-Dub.py is a python script that will automatically generate a cassette.json based on your folder structure. It is intended to be run locally on the command line,
-but if your server is configured to run python scripts you could try running it from the browser or setup a crontab.
-- It will scan the releases/ folder and create necessary .jspf files in a _data subdirectory, and it will overwite cassette.json.
+Dub.py is a python script that will automatically generate a cassette.json based on the files in your working directory. It is intended to be run locally on the command line, but if your server is [configured to run python scripts](https://docs.python.org/2/library/cgi.html) you can try running it from the browser or setup a crontab.
+Notes:
+- This script recursively searches through files and folders in the working directory and generates cassette.json as well as any necessary tracklist.jspf files.
+- The .jspf files are stored in _data and the music directories are left untouched.
 - You can use subfolders to organize releases by artist, i.e. ```releases/artist-name/release-name``` 
-- If no artwork file is found, default-artwork.jpg will be used.
-- The script scans the pages/ folder for .md files and adds it to cassette.json
+- If no artwork file is found, a default-artwork.jpg will be used.
 
-
-## Base URL
-
-If you run the app from a subdirectory from document root, you will need to alter the index.html base tag to:
-```
-  <base href="/subdirectory/" />
-```
-or alternatively load all assets using absolute paths.
-
-## Clean URLS
-If you want to remove the hash # from the URL routes and use History API set app.settings.cleanURLs to true.
-
-Note that running the app with History API enabled from document root is encouraged as it takes care of all relative link issues.
+### Clean URLS
+If you want to remove the hash # from the URL routes and use History API instead, in index.html set app.settings.cleanURLs to true. Note that running the app with History API enabled from document root is encouraged as it takes care of all relative link issues.
 
 
 ## Flat File Example
 
 Note: you can skip steps 3 and 4 if you use the dub.py build script.
 
-1. Add static pages by creating markdown files in the /pages directory. Tip: Make sure the filename is all lower case with no spaces - you can use dashes instead of spaces, i.e. about-us.md
-2. Add your music in the /releases directory. Place each release in its own directory, i.e. /releases/your-first-release
-  - Each directory represents one release.  Tip: The directory name works best if all lower case with no spaces, i.e. album-title
+1. Add static pages by creating [markdown](https://daringfireball.net/projects/markdown/) files in the /pages directory, each file should have the .md extension.
+2. Add your music in the /releases directory. Place each release in its own directory, i.e. /releases/release-title or /releases/artist/release-title
   - Add liner notes by including a notes.md markdown file
   - Add artwork by including an artwork.jpg file (400x400 size is recommended)
   - Add MP3s or gather a list of remote MP3 URLs (128kbps - 320kbps CBR MP3 recommended)
-3. Add a tracklist.jspf file, which contains the order of the tracklist, metadata, and file locations (local or remote)
-4. Update cassette.json with the URLs for your new pages and music. 
+3. Create a tracklist.jspf file for each release, which contains the order of the tracklist, metadata, and file locations (local or remote)
+4. Build cassette.json with the URLs for your new pages and music. 
 5. Visit your new static site. 
 
 
@@ -144,7 +140,7 @@ URL Path | Description
 / | If no path is entered, the default homepage is loaded.
 /[page-title] | This parses and displays the markdown for a page as defined in cassette.json.
 /releases | A list of all releases with artwork and name, hyperlinked to the individual release page.
-/release/[release-title], /release/[artist-name]/[release-title] | Displays all the information for a single release: artwork, playable tracklist, and notes.
+/release/[release-title]<br/>/release/[artist-name]/[release-title] | Displays all the information for a single release: artwork, playable tracklist, and notes.
 
 ## Troubleshooting
 
