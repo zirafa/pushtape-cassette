@@ -39,7 +39,7 @@ or alternatively load all assets using absolute paths.
 
 ## Cassette.json
 
-- Build cassette.json by manually editing JSON files or run the build script.
+- Build cassette.json by manually editing the file or run the build script.
 
 - Run the build script to automatically scan the working directory for music and pages and generate cassette.json:
 ```
