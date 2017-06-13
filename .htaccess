@@ -10,6 +10,9 @@ DirectoryIndex index.html
 # Redirect 404s to index file
 ErrorDocument 404 /index.html
 
+# Allow cgi-scripts to run in this directory
+# Addhandler cgi-script .py .pl .cgi
+
 # Having problems with mod_rewrite?
 # http://stackoverflow.com/questions/1755826/mod-rewrite-path-issues
 # http://stackoverflow.com/questions/25293601/angularjs-crashes-when-i-define-a-route-with-two-parameters-in-it

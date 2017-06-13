@@ -1,8 +1,11 @@
-###  PUSHTAPE DUB.PY (Cassette Maker Script) 
+#!/usr/local/bin/python
+
+###  PUSHTAPE DUB.PY
 #
 # This script recursively searches through files and folders in the working directory
 # and generates cassette.json as well as any necessary tracklist.jspf files.
-# The .jspf files are stored in _data and the music directories are not modified in any way.
+# The .jspf files are stored in _data and the music directories are left untouched.
+# NOTE: Any existing cassette.json or .jspf files will be overwritten.
 #
 ### SETUP 
 # Place each music release in its own folder under /releases, with an optional artwork.jpg and notes.md file.
@@ -32,8 +35,11 @@
 #     cd pushtape-cassette
 #     python dub.py
 #
-# You can optionally specify a different working directory:
-#     python dub.py ../../some_other_directory
+# To run the script as a CGI server script:
+# - Set this file's permission to 755 (may need to move it to cgi-bin)
+# - In .htaccess: Addhandler cgi-script .py .pl .cgi
+# - Set verbose_output below to False and make sure default_walk_dir is your pushtape directory
+# Read more: https://docs.python.org/2/library/cgi.html
 
 import os
 import sys
@@ -41,14 +47,20 @@ import json
 import datetime
 import re
 
-# Set this to True to cleanup common numeric prefixes, i.e. 01 Deadweight.mp3 becomes Deadweight
+# Cleanup common numeric prefixes, i.e. 01 Deadweight.mp3 becomes Deadweight
 cleanup_names = True
 
-# If no argument, assume working directory is the same as the script path
+# Show detailed output about the scripts 
+verbose_output = False
+
+# Default working directory path if none specified 
+default_walk_dir = '.'
+
+# If no argument passed, assume default working directory path
 if len(sys.argv) >= 2:
   walk_dir = sys.argv[1]
 else:
-  walk_dir = '.'
+  walk_dir = default_walk_dir
 
 # Output directory 
 output_dir = os.path.join(walk_dir, '_data')
@@ -62,14 +74,14 @@ cassette_path = os.path.join(walk_dir, 'cassette.json')
 releases_dir = os.path.join(walk_dir, 'releases')
 pages_dir = os.path.join(walk_dir, 'pages')
 
-
-print "\n\n\n\n"
-print ":::::::::::::::::::::::::::::"
-print ":: Pushtape Cassette Maker ::"
-print ":::::::::::::::::::::::::::::"
-print "This script will generate relevant tracklist.jspf files and a cassette.json using files and folders found in the working directory: " + walk_dir
-print "Each music release must be in a separate folder inside of " + releases_dir
-print "Each page should be a markdown file (.md) and placed inside of " + pages_dir
+print "\n\n"
+print "::::::::::::::::::::::::::::::::::"
+print "::    Pushtape Cassette Dub     ::"
+print "::::::::::::::::::::::::::::::::::"
+if (verbose_output):  
+  print "This script will generate relevant tracklist.jspf files and a cassette.json using files and folders found in the working directory: " + walk_dir
+  print "Each music release must be in a separate folder inside of " + releases_dir
+  print "Each page should be a markdown file (.md) and placed inside of " + pages_dir
 
 # os.walk reference: https://stackoverflow.com/questions/2212643/python-recursive-folder-read
 # for root, subdirs, files in os.walk(releases_dir):
@@ -80,7 +92,8 @@ print "Each page should be a markdown file (.md) and placed inside of " + pages_
 # Walk the releases directory and output tracklist.jspf files
 releases = {}
 for root, subdirs, files in os.walk(releases_dir):
-    print('--\nDirectory: ' + root)
+    if (verbose_output):
+      print('--\nDirectory: ' + root)
     
     current_dir = os.path.basename(root)
     if (os.path.exists(os.path.join(current_dir, 'tracklist.jspf'))):
@@ -113,7 +126,8 @@ for root, subdirs, files in os.walk(releases_dir):
           title = re.sub('^\d{1,2} ', '', title)
         if ext == ".mp3" or ext == ".wav":
           with open(file_path, 'rb') as f:
-            print('\t- Found file: %s (full path: %s)' % (filename, file_relpath))
+            if (verbose_output):
+              print('\t- Found file: %s (full path: %s)' % (filename, file_relpath))
             track = {}
             track['location'] = str(file_relpath)
             track['title'] = str(title)
@@ -122,10 +136,12 @@ for root, subdirs, files in os.walk(releases_dir):
             tracks.append(track)
         if filename == "notes.md":
           notes_path = file_relpath
-          print('\t- Found notes: %s (full path: %s)' % (filename, file_relpath))
+          if (verbose_output):
+            print('\t- Found notes: %s (full path: %s)' % (filename, file_relpath))
         if filename == "artwork.jpg" or filename == "folder.jpg" or filename == "artwork.png" or filename == "folder.png":
           artwork_path = file_relpath
-          print('\t- Found artwork: %s (full path: %s)' % (filename, file_relpath))       
+          if (verbose_output):
+            print('\t- Found artwork: %s (full path: %s)' % (filename, file_relpath))       
   
           
     if len(tracks) > 0 and root != releases_dir:
@@ -155,7 +171,8 @@ for root, subdirs, files in os.walk(releases_dir):
           playlist['playlist']['creator'] = str(artist)
         playlist['playlist']['track'] = tracks
         json.dump(playlist, tracklist_file, sort_keys=True, indent=2, separators=(',', ': '))
-        print "Wrote to: " + tracklist_file_path
+        if (verbose_output):
+          print "Wrote to: " + tracklist_file_path
     
 # Walk the pages directory to find pages
 pages = {}
@@ -168,7 +185,8 @@ for root, subdirs, files in os.walk(pages_dir):
     if (cleanup_names):
       title = re.sub('^\d{1,2} ', '', title)
     if ext == ".md":
-      print('Found page: %s (full path: %s)' % (filename, file_relpath))
+      if (verbose_output):
+        print('Found page: %s (full path: %s)' % (filename, file_relpath))
       pages[title] = {'location' : file_relpath, 'title' : title }
 
 # Releases is a special case
@@ -182,4 +200,10 @@ cassetteJSON['releases'] = releases
 # Output to cassette.json
 with open(cassette_path, 'wb') as f:
   json.dump(cassetteJSON, f, sort_keys=True, indent=2, separators=(',', ': '))
-  print "Wrote to: " + cassette_path 
+  print "*** " + str(cassetteJSON['lastBuild']) + " ***"
+  print "Total of "+ str(len(pages) - 1) + " pages found."
+  print "Total of " + str(len(releases)) + " releases found."  
+  if (verbose_output):
+    print "Wrote to: " + cassette_path
+  print "...all done!\n"
+  
