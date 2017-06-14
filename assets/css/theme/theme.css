@@ -12,6 +12,9 @@
 /**
  * Layout and containers
  */
+html {
+  overflow-x: hidden;
+}
 html, #container, .inner {
   position: relative;
   min-height: 100%;  
