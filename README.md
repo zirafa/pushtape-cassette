@@ -8,7 +8,7 @@ Pushtape Cassette is a lightweight framework for building better music web appli
 
 ## About
 
-This project provides a skeletal static frontend for building music web applications that can be integrated with any number of backend technologies: flat files, Wordpress/Drupal, JS Frameworks, Python, and Ruby. The key element that powers this idea is the cassette.json file, a [portable discography format](https://github.com/zirafa/discography-yaml). This file acts like a single comprehensive endpoint - and from that single point, javascript is used to create a single-page-application framework using various micro-libraries. 
+This project allows you to create static music webapps that can be integrated with any number of backend technologies: flat files, Wordpress/Drupal, JS Frameworks, Python, and Ruby. The key element that powers this idea is the cassette.json file, a [portable discography format](https://github.com/zirafa/discography-yaml). This file acts like a single comprehensive endpoint - and from that single point, javascript is used to create a single-page-application framework using various micro-libraries. 
 
 # Quick Start
 
