@@ -1,6 +1,7 @@
 # Pushtape Cassette
 
-Pushtape Cassette is a lightweight frontend framework for building better music web applications. Make a cassette of your music and render a complete music web app in seconds, featuring a persistent music player.
+Pushtape Cassette is a lightweight framework for building better music web applications. Make a cassette of your music and render a complete music web app in seconds, featuring a persistent music player. 
+<h3><a target="_blank" href="http://www.pushtape.com/demo/cassette">Demo</a></h3>
 
 ## About
 
