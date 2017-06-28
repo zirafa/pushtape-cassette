@@ -8,11 +8,15 @@ Pushtape Cassette is a lightweight framework for building better music web appli
 
 ## About
 
-This project allows you to create a static music webapp that can be integrated with any number of backend technologies: flat files, Wordpress/Drupal, JS Frameworks, Python, and Ruby. The key element that powers this idea is the cassette.json file, a [portable discography format](https://github.com/zirafa/discography-yaml). This file acts like a single comprehensive endpoint - and from this endpoint, javascript is used to create a single-page-application using [various micro-libraries](#why-js-micro-libraries-why-not-angular-ember-etc). 
+This project creates a static music webapp that can be integrated with any number of backend technologies: flat files, Wordpress/Drupal, JS Frameworks, Python, and Ruby. The key element that powers this idea is the cassette.json file, a [portable discography format](https://github.com/zirafa/discography-yaml). This file acts like a single comprehensive endpoint - and from this endpoint, javascript is used to create a single-page-application using [various micro-libraries](#why-js-micro-libraries-why-not-angular-ember-etc). 
 
-# Quick Start
+# Installation
 
-- Unzip all files to the document root on your web server. Check the base URL tag in index.html and build cassette.json.
+- Clone this repo to your web server
+- Check the base URL tag in index.html
+- Add new music folders inside the releases directory and add markdown files inside the pages directory.
+- Run ``` python dub.py ``` or update cassette.json manually
+- Visit index.html in your browser
 
 ## Base URL
 
@@ -26,7 +30,6 @@ or alternatively load all assets using absolute paths.
 
 - Build cassette.json by manually editing the file or run the build script.
 
-- Run the build script to automatically scan the working directory for music and pages and generate cassette.json:
 ```
 $ cd pushtape-cassette
 $ python dub.py
@@ -34,7 +37,7 @@ $ python dub.py
 
 ### Dub.py
 
-Dub.py is a python script that will automatically generate a cassette.json based on the files in your working directory. It is intended to be run locally on the command line, but if your server is [configured to run python scripts](https://docs.python.org/2/library/cgi.html) you can try running it from the browser or setup a crontab.
+The build script will automatically generate a cassette.json based on the files in the working directory. It is intended to be run locally on the command line, but if your server is [configured to run python scripts](https://docs.python.org/2/library/cgi.html) you can try running it from the browser or setup a crontab.
 Notes:
 - This script recursively searches through files and folders in the working directory and generates cassette.json as well as any necessary tracklist.jspf files.
 - The .jspf files are stored in _data and the music directories are left untouched.
