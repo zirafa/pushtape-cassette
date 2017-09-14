@@ -95,7 +95,9 @@ footer:hover .pt-scrubber .pt-statusbar .pt-handle {
   font-size:2rem;
   color:#ddd;
   font-family:Inconsolata, monospace;
-  float:right;
+  margin-right: auto;
+  width: 50%;
+  float: right;
 }
 .pt-current-track-title {
 
