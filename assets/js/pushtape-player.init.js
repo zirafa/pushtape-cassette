@@ -6,7 +6,7 @@ soundManager.setup({
   debugMode: false,   // disable or enable debug output
   url: 'assets/js/swf/',       // path to directory containing SM2 SWF
   useHighPerformance: true, // keep flash on screen, boost performance
-  preferFlash: true, // for visualization effects (smoother scrubber)
+  preferFlash: false, // for visualization effects (smoother scrubber)
   flashVersion: 9,
   wmode: 'transparent', // transparent SWF, if possible
   onready: function() {
