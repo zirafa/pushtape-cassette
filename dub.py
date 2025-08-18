@@ -123,7 +123,7 @@ for root, subdirs, files in os.walk(releases_dir):
         ext = os.path.splitext(filename)[-1].lower()
         title = os.path.splitext(filename)[0].lower()
         if (cleanup_names):
-          title = re.sub('^\d{1,2} ', '', title)
+          title = re.sub(r'^\d{1,2} ', '', title)
         if ext == ".mp3" or ext == ".wav":
           with open(file_path, 'rb') as f:
             if (verbose_output):
@@ -145,7 +145,7 @@ for root, subdirs, files in os.walk(releases_dir):
   
           
     if len(tracks) > 0 and root != releases_dir:
-      with open(tracklist_file_path, 'wb') as tracklist_file:
+      with open(tracklist_file_path, 'w', encoding='utf-8') as tracklist_file:
       
         release = {}
         http_path = ''
@@ -183,7 +183,7 @@ for root, subdirs, files in os.walk(pages_dir):
     ext = os.path.splitext(filename)[-1].lower()
     title = os.path.splitext(filename)[0]
     if (cleanup_names):
-      title = re.sub('^\d{1,2} ', '', title)
+      title = re.sub(r'^\d{1,2} ', '', title)
     if ext == ".md":
       if (verbose_output):
         print('Found page: %s (full path: %s)' % (filename, file_relpath))
@@ -193,12 +193,12 @@ for root, subdirs, files in os.walk(pages_dir):
 pages['releases'] = {}
       
 cassetteJSON = {}
-cassetteJSON['lastBuild'] = str(datetime.datetime.utcnow())
+cassetteJSON['lastBuild'] = str(datetime.datetime.now(datetime.UTC))
 cassetteJSON['pages'] = pages
 cassetteJSON['releases'] = releases
 
 # Output to cassette.json
-with open(cassette_path, 'wb') as f:
+with open(cassette_path, 'w', encoding='utf-8') as f:
   json.dump(cassetteJSON, f, sort_keys=True, indent=2, separators=(',', ': '))
   print "*** " + str(cassetteJSON['lastBuild']) + " ***"
   print "Total of "+ str(len(pages) - 1) + " pages found."
